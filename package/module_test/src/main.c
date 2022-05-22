@@ -105,7 +105,7 @@ int main (int argc, char **argv) {
   RUN_TEST("Ten elements", ten_numbers(arguments.chrdev_file1));
   RUN_TEST("Min max", min_max_test(arguments.chrdev_file1));
   RUN_TEST("256 numbers", lots_of_numbers(arguments.chrdev_file1));
-  RUN_TEST("Double open", double_open(arguments.chrdev_file1, arguments.chrdev_file2));
+  // RUN_TEST("Double open", double_open(arguments.chrdev_file1, arguments.chrdev_file2));
   RUN_TEST("Resize", test_resize(arguments.chrdev_file1));
 
   printf("\nPassed %d/%d tests\n", tests_passed, tests_total);
