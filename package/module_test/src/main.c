@@ -104,9 +104,9 @@ int main(int argc, char **argv)
 
     printf("Testing %s\n", arguments.chrdev_file);
 
-    printf("Preparing the file..");
+    printf("Preparing the file..\n");
     reset_file(arguments.chrdev_file);
-    printf("File should be ready");
+    printf("File should be ready\n");
 
     int result = 0;
     int tests_passed = 0;
