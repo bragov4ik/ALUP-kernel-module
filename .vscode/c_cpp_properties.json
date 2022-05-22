@@ -7,12 +7,12 @@
             "name": "Linux",
             "includePath": [
                 "${workspaceFolder}/**",
-                "${buildrootDir}/output/build/linux-5.15.13/include/**",
-                "${buildrootDir}/output/build/linux-5.15.13/arch/arm64/**"
+                // "${buildrootDir}/output/build/linux-5.15.13/include/**",
+                // "${buildrootDir}/output/build/linux-5.15.13/arch/arm64/**"
             ],
             "defines": [],
-            // "compilerPath": "/usr/bin/gcc",
-            "compilerPath": "~/Downloads/buildroot-2021.11.1/output/host/bin/arm-linux-gnueabihf-gcc-7.3.1",
+            "compilerPath": "/usr/bin/gcc",
+            // "compilerPath": "~/Downloads/buildroot-2021.11.1/output/host/bin/arm-linux-gnueabihf-gcc-7.3.1",
             "cStandard": "gnu17",
             "cppStandard": "gnu++14",
             "intelliSenseMode": "linux-gcc-arm"

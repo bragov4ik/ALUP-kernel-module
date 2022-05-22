@@ -6,6 +6,7 @@
 #include <linux/slab.h>
 #include <linux/ioctl.h>
 #include <linux/mutex.h>
+#include <linux/usb.h>
 
 #include "main.h"
 #include "utils.h"
@@ -13,6 +14,8 @@
 #define CHRDEV_NAME "stack_file_kek_chrdev"
 #define INIT_STACK_LIMIT 256
 #define SUCCESS 0
+#define VID 0x13fe
+#define PID 0x4300
 
 // Major number of the character device
 static int MAJOR;
@@ -29,8 +32,8 @@ typedef struct Stack {
 // Stack containing saved data
 static Stack stack_instance;
 
-// Flag indicating that the device is opened
-// static bool is_opened;
+// Flag indicating that USB is connected
+static bool usb_connected;
 
 // Mutex for managing concurrent reads/writes
 DEFINE_MUTEX(stack_mutex);
@@ -45,6 +48,18 @@ static void release_mutex(struct mutex* m, char* op_name) {
 	printk(KERN_DEBUG "Releasing mutex for '%s'...\n", op_name);
 	mutex_unlock(m);
 	printk(KERN_DEBUG "Mutex for '%s' released.\n", op_name);
+}
+
+static bool usb_allows(void) {
+	printk(KERN_DEBUG "Checking if usb is connected..\n");
+	if (!usb_connected) {
+		printk(KERN_DEBUG "Haven't detected usb, denying access\n");
+		return false;
+	}
+	else {
+		printk(KERN_DEBUG "Found USB, allowing access\n");
+		return true;
+	}
 }
 
 /* Updates size of the stack memory allocation,
@@ -92,7 +107,7 @@ static int resize(uint new_size) {
 }
 
 /* Clear the stack (basically resets stack pointer)
- * to 0. Not expected to fail.
+ * to 0.
  */
 static void clear(void) {
 	acquire_mutex(&stack_mutex, "clear");
@@ -108,6 +123,10 @@ ssize_t stack_read(struct file *filp, char __user *buf, size_t count, loff_t *of
 
 	printk(KERN_DEBUG "Reading from stack.\n");
 
+	if (!usb_allows()) {
+		return -EACCES;
+	}
+
 	acquire_mutex(&stack_mutex, "read");
 	{
 		if (stack_instance.sp == 0) {
@@ -117,13 +136,13 @@ ssize_t stack_read(struct file *filp, char __user *buf, size_t count, loff_t *of
 		}
 		// Pop off the stack
 		item = stack_instance.start[stack_instance.sp-1];
-		printk(KERN_DEBUG "%d is the head of stack", item);
+		printk(KERN_DEBUG "%d is the head of stack\n", item);
 		stack_instance.sp -= 1;
 
 		// Convert to string and copy to buffer
 		str = my_itos(item, count);
 		size_str = my_strlen(str)+1;
-		printk(KERN_DEBUG "Copying '%s' to user space", str);
+		printk(KERN_DEBUG "Copying '%s' to user space\n", str);
 		uncopied = copy_to_user(buf, str, size_str);
 		kfree(str);
 
@@ -131,7 +150,7 @@ ssize_t stack_read(struct file *filp, char __user *buf, size_t count, loff_t *of
 			printk(KERN_WARNING "Could not copy %d/%d bytes\n", uncopied, count);
 		}
 		else {
-			printk(KERN_DEBUG "Read %d successfully", item);
+			printk(KERN_DEBUG "Read %d successfully\n", item);
 		}
 	}
 	release_mutex(&stack_mutex, "read");
@@ -147,6 +166,10 @@ ssize_t stack_write(struct file *filp, const char __user *buf, size_t count, lof
 	int res;
 
 	printk(KERN_DEBUG "Writing to stack.\n");
+
+	if (!usb_allows()) {
+		return -EACCES;
+	}
 
 	acquire_mutex(&stack_mutex, "write");
 	{
@@ -174,7 +197,7 @@ ssize_t stack_write(struct file *filp, const char __user *buf, size_t count, lof
 			release_mutex(&stack_mutex, "write");
 			return res;
 		}
-		printk(KERN_DEBUG "%d is on stack", stack_instance.start[stack_instance.sp]);
+		printk(KERN_DEBUG "%d is on stack\n", stack_instance.start[stack_instance.sp]);
 		stack_instance.sp += 1;
 	}
 	release_mutex(&stack_mutex, "write");
@@ -184,19 +207,22 @@ ssize_t stack_write(struct file *filp, const char __user *buf, size_t count, lof
 
 int stack_open (struct inode *inode, struct file *filp) {
 	printk(KERN_DEBUG "Opening stack.\n");
-	// Race condition?? toc/tou - pohui delete
-	// if (is_opened == true) {
-	// 	printk(KERN_WARNING "Could not open stack device: Already in use");
-	// 	return -EBUSY;
-	// }
-	// is_opened = true;
+
+	if (!usb_allows()) {
+		return -EACCES;
+	}
+
 	printk(KERN_DEBUG "Opened stack.\n");
 	return SUCCESS;
 }
 
 int stack_release (struct inode *inode, struct file *filp) {
 	printk(KERN_DEBUG "Releasing stack.\n");
-	// is_opened = false;
+
+	if (!usb_allows()) {
+		return -EACCES;
+	}
+
 	return SUCCESS;
 }
 
@@ -214,6 +240,11 @@ long device_ioctl(
 	uint new_size;
 
 	printk(KERN_INFO "Received ioctl %d!\n", ioctl_num);
+
+	if (!usb_allows()) {
+		return -EACCES;
+	}
+
     /* Update size of device's stack. */
 	if (ioctl_num == IOCTL_CHANGE_SIZE) {
 		new_size = (int)ioctl_param;
@@ -248,7 +279,36 @@ struct file_operations fops = {
 	.unlocked_ioctl = device_ioctl,
 };
 
+// USB stuff
+
+int usb_probe (struct usb_interface *intf, const struct usb_device_id *id) {
+	printk(KERN_INFO "Drive (%04X:%04X) plugged\n", id->idVendor, id->idProduct);
+	usb_connected = true;
+	return SUCCESS;
+}
+void usb_disconnect (struct usb_interface *intf) {
+	printk(KERN_INFO "Drive unplugged\n");
+	usb_connected = false;
+}
+
+/* table of devices that work with this driver */
+static struct usb_device_id stack_table [] = {
+        { USB_DEVICE(VID, PID) },
+        { }                      /* Terminating entry */
+};
+
+static struct usb_driver stack_driver = {
+        .name        = "stack_usb_lol",
+        .probe       = usb_probe,
+        .disconnect  = usb_disconnect,
+        .id_table    = stack_table,
+};
+
+MODULE_DEVICE_TABLE (usb, stack_table);
+
 int __init stack_init(void) {
+	int result;
+
 	printk(KERN_INFO "Registering character device...\n");
 	MAJOR = register_chrdev(0, CHRDEV_NAME, &fops);
 	
@@ -261,6 +321,14 @@ int __init stack_init(void) {
 	stack_instance.sp = 0;
 	stack_instance.max_size = INIT_STACK_LIMIT;
 	print_welcome(CHRDEV_NAME, MAJOR);
+
+	// register USB
+	result = usb_register(&stack_driver);
+	if (result < 0) {
+			printk(KERN_ALERT "Failed to register usb driver with error code %d\n", result);
+			return result;
+	}
+	usb_connected = false;
 	return SUCCESS;
 }
 
@@ -268,9 +336,13 @@ void __exit stack_cleanup(void) {
 	printk(KERN_INFO "Cleaning up module.\n");
 	printk(KERN_INFO "Freeing up memory.\n");
 	kfree(stack_instance.start);
+
 	printk(KERN_INFO "Unregistering character device...\n");
 	unregister_chrdev(MAJOR, CHRDEV_NAME);
-	printk(KERN_INFO "Unregistered character device.\n");
+
+	printk(KERN_INFO "Unregistering USB driver...\n");
+	usb_deregister(&stack_driver);
+	printk(KERN_INFO "Finished clean up.\n");
 	return;
 }
 

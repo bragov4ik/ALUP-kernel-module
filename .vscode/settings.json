@@ -24,6 +24,7 @@
         "fs.h": "c",
         "kernel.h": "c",
         "utils.h": "c",
-        "stdbool.h": "c"
+        "stdbool.h": "c",
+        "functional": "c"
     }
 }
