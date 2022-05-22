@@ -1,0 +1,28 @@
+{
+    "files.associations": {
+        "module.h": "c",
+        "percpu.h": "c",
+        "buildid.h": "c",
+        "mm_types.h": "c",
+        "spinlock.h": "c",
+        "mm_types_task.h": "c",
+        "cpumask.h": "c",
+        "bug.h": "c",
+        "printk.h": "c",
+        "cache.h": "c",
+        "cputype.h": "c",
+        "sysreg.h": "c",
+        "alternative.h": "c",
+        "alternative-macros.h": "c",
+        "compiler.h": "c",
+        "auxvec.h": "c",
+        "types.h": "c",
+        "threads.h": "c",
+        "atomic.h": "c",
+        "*.tcc": "c",
+        "memory": "c",
+        "fs.h": "c",
+        "kernel.h": "c",
+        "utils.h": "c"
+    }
+}

@@ -1,0 +1,5 @@
+config BR2_PACKAGE_MODULE_TEST
+        bool "module_test"
+        help
+	  This package contains test(-s) for kernel module(-s) for advanced linux course.
+

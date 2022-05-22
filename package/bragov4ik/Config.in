@@ -1,0 +1,5 @@
+config BR2_PACKAGE_BRAGOV4IK
+        bool "bragov4ik"
+        help
+	  This package contains kernel module(-s) for advanced linux course.
+

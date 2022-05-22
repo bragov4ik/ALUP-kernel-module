@@ -1,0 +1,3 @@
+source "$BR2_EXTERNAL_bragov4ik_kernel_mod_PATH/package/bragov4ik/Config.in"
+source "$BR2_EXTERNAL_bragov4ik_kernel_mod_PATH/package/module_test/Config.in"
+
