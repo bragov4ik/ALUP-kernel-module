@@ -1,6 +1,7 @@
 # Stack character device for ALUP course
 
 * [Report on the task 3 can be found here](/REPORT.md)
+* [Report on the task 4 can be found here](/REPORT4.md)
 
 This device works as stack for integer values. Writing is equal to push operation and reading to pop.
 
