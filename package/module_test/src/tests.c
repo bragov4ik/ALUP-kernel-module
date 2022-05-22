@@ -26,7 +26,7 @@ Returns 0 on success, other number on failure
 */
 int one_element(char* fname) {
     char* numbers[] = { "-31337" };
-    return __multiple_elements(fname, numbers, sizeof(numbers));
+    return __multiple_elements(fname, numbers, sizeof(numbers)/sizeof(numbers[0]));
 }
 
 /*
@@ -37,7 +37,7 @@ Returns 0 on success, other number on failure
 */
 int negative_element(char* fname) {
     char* numbers[] = { "-31337" };
-    return __multiple_elements(fname, numbers, sizeof(numbers));
+    return __multiple_elements(fname, numbers, sizeof(numbers)/sizeof(numbers[0]));
 }
 
 /*
@@ -48,7 +48,7 @@ Returns 0 on success, other number on failure
 */
 int ten_numbers(char* fname) {
     char* numbers[] = { "31337", "123", "456", "1", "2", "3", "-3", "-2", "-1", "0"};
-    return __multiple_elements(fname, numbers, sizeof(numbers));
+    return __multiple_elements(fname, numbers, sizeof(numbers)/sizeof(numbers[0]));
 }
 
 /*
@@ -59,7 +59,7 @@ Returns 0 on success, other number on failure
 */
 int min_max_test(char* fname) {
     char* numbers[] = { "2147483647", "-2147483648" };
-    return __multiple_elements(fname, numbers, sizeof(numbers));
+    return __multiple_elements(fname, numbers, sizeof(numbers)/sizeof(numbers[0]));
 }
 
 /*
@@ -96,39 +96,102 @@ int lots_of_numbers(char* fname) {
         "101", "102", "103", "104", "105", "106", "107", "108", "109", "110",
         "111", "112", "113", "114", "115", "116", "117", "118", "119", "120",
         "121", "122", "123", "124", "125", "126", "127" };
-    return __multiple_elements(fname, numbers, sizeof(numbers));
+    return __multiple_elements(fname, numbers, sizeof(numbers)/sizeof(numbers[0]));
 }
 
 /*
-Test inserting/popping ten elements.
+Insert `number_count` elements from `numbers` into opened file (`fd`).
+
+Returns 0 on success, other number on failure.
+*/
+static int __insert_multiple(int fd, char** numbers, int numbers_count) {
+    for (int i = 0; i < numbers_count; ++i) {
+        printf("Writing '%s' (%d bytes)\n", numbers[i], strlen(numbers[i])+1);
+        if (write(fd, numbers[i], strlen(numbers[i])+1) == -1) {
+            return errno;
+        }
+    }
+    return 0;
+}
+
+/*
+Read `number_count` elements from `fd`. Fails if there were less elements.
+
+Returns 0 on success, other number on failure.
+(3 number of elements was less than expected).
+*/
+static int __read_multiple_unchecked(int fd, int numbers_count) {
+    // some buffer for ints
+    char read_val[13];
+    int res;
+
+    read_val[12] = '\0';
+
+    for (int i = numbers_count - 1; i >= 0; --i) {
+        res = read(fd, read_val, sizeof(read_val)-1);
+        if (res == 0) {
+            return 3;
+        }
+        else if (res == -1) {
+            return errno;
+        }
+        printf("Read '%s'\n", read_val);
+    }
+}
+
+static int __read_multiple_checked(int fd, char** numbers, int numbers_count) {
+    // some buffer for ints
+    char read_val[13];
+    int res;
+
+    read_val[12] = '\0';
+
+    for (int i = numbers_count - 1; i >= 0; --i) {
+        res = read(fd, read_val, sizeof(read_val)-1);
+        if (res == 0) {
+            return 3;
+        }
+        else if (res == -1) {
+            return errno;
+        }
+        printf("Read '%s'\n", read_val);
+        if (strcmp(numbers[i], read_val) != 0) {
+            printf("Read value (%s) different than written (%s)\n", read_val, numbers[i]);
+            __clear_file(fd);
+            return 3;
+        }
+    }
+}
+
+/*
+Test inserting/popping multiple elements.
 
 They should be returned in the fifo order.
 
 Returns 0 on success, other number on failure
-(3 if the test is not passed)
+(3 if the test is not passed).
 */
 int __multiple_elements(char* fname, char** numbers, int numbers_count) {
-    int file = open(fname, O_RDWR);
-    if (file == -1) {
+    int fd;
+    int res;
+
+    fd = open(fname, O_RDWR);
+    if (fd == -1) {
         return errno;
     }
-    for (int i = 0; i < numbers_count/sizeof(numbers[0]); ++i) {
-        printf("Writing '%s' (%d bytes)\n", numbers[i], strlen(numbers[i])+1);
-        write(file, numbers[i], strlen(numbers[i])+1);
+
+    res = __insert_multiple(fd, numbers, numbers_count);
+    if (res != 0) {
+        close(fd);
+        return res;
     }
-    for (int i = numbers_count/sizeof(numbers[0]) - 1; i >= 0; --i) {
-        // some buffer I guess
-        char read_val[12];
-        read(file, read_val, sizeof(read_val));
-        printf("Read '%s'\n", read_val);
-        if (strcmp(numbers[i], read_val) != 0) {
-            printf("Read value (%s) different than written (%s)\n", read_val, numbers[i]);
-            __clear_file(file);
-            close(file);
-            return 3;
-        }
+    
+    res = __read_multiple_checked(fd, numbers, numbers_count);
+    if (res != 0) {
+        close(fd);
+        return res;
     }
-    close(file);
+    close(fd);
     return 0;
 }
 
