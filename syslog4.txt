@@ -1,0 +1,168 @@
+
+May 22 08:43:54 ubuntu kernel: [ 6157.983757] Opening stack.
+May 22 08:43:54 ubuntu kernel: [ 6157.983761] Checking if usb is connected..
+May 22 08:43:54 ubuntu kernel: [ 6157.983762] Found USB, allowing access
+May 22 08:43:54 ubuntu kernel: [ 6157.983762] Opened stack.
+May 22 08:43:54 ubuntu kernel: [ 6157.983768] Reading from stack.
+May 22 08:43:54 ubuntu kernel: [ 6157.983769] Checking if usb is connected..
+May 22 08:43:54 ubuntu kernel: [ 6157.983769] Found USB, allowing access
+May 22 08:43:54 ubuntu kernel: [ 6157.983769] Acquiring mutex for 'read'...
+May 22 08:43:54 ubuntu kernel: [ 6157.983771] Mutex for 'read' acquired.
+May 22 08:43:54 ubuntu kernel: [ 6157.983772] 123 is the head of stack
+May 22 08:43:54 ubuntu kernel: [ 6157.983773] Copying '123' to user space
+May 22 08:43:54 ubuntu kernel: [ 6157.983775] Read 123 successfully
+May 22 08:43:54 ubuntu kernel: [ 6157.983776] Releasing mutex for 'read'...
+May 22 08:43:54 ubuntu kernel: [ 6157.983776] Mutex for 'read' released.
+May 22 08:43:54 ubuntu kernel: [ 6157.983805] Reading from stack.
+May 22 08:43:54 ubuntu kernel: [ 6157.983807] Checking if usb is connected..
+May 22 08:43:54 ubuntu kernel: [ 6157.983807] Found USB, allowing access
+May 22 08:43:54 ubuntu kernel: [ 6157.983807] Acquiring mutex for 'read'...
+May 22 08:43:54 ubuntu kernel: [ 6157.983808] Mutex for 'read' acquired.
+May 22 08:43:54 ubuntu kernel: [ 6157.983808] No data in stack left.
+May 22 08:43:54 ubuntu kernel: [ 6157.983811] Releasing mutex for 'read'...
+May 22 08:43:54 ubuntu kernel: [ 6157.983811] Mutex for 'read' released.
+May 22 08:43:54 ubuntu kernel: [ 6157.983819] Releasing stack.
+May 22 08:43:54 ubuntu kernel: [ 6157.983820] Checking if usb is connected..
+May 22 08:44:05 ubuntu kernel: [ 6157.983820] Found USB, allowing access
+May 22 08:44:05 ubuntu kernel: [ 6168.736882] Opening stack.
+May 22 08:44:05 ubuntu kernel: [ 6168.736886] Checking if usb is connected..
+May 22 08:44:05 ubuntu kernel: [ 6168.736887] Found USB, allowing access
+May 22 08:44:05 ubuntu kernel: [ 6168.736887] Opened stack.
+May 22 08:44:05 ubuntu kernel: [ 6168.736896] Writing to stack.
+May 22 08:44:05 ubuntu kernel: [ 6168.736896] Checking if usb is connected..
+May 22 08:44:05 ubuntu kernel: [ 6168.736897] Found USB, allowing access
+May 22 08:44:05 ubuntu kernel: [ 6168.736897] Acquiring mutex for 'write'...
+May 22 08:44:05 ubuntu kernel: [ 6168.736898] Mutex for 'write' acquired.
+May 22 08:44:05 ubuntu kernel: [ 6168.736899] Parsing and saving 123
+May 22 08:44:05 ubuntu kernel: [ 6168.736899]  to stack
+May 22 08:44:05 ubuntu kernel: [ 6168.736900] 123 is on stack
+May 22 08:44:05 ubuntu kernel: [ 6168.736901] Releasing mutex for 'write'...
+May 22 08:44:05 ubuntu kernel: [ 6168.736902] Mutex for 'write' released.
+May 22 08:44:05 ubuntu kernel: [ 6168.736904] Releasing stack.
+May 22 08:44:05 ubuntu kernel: [ 6168.736904] Checking if usb is connected..
+May 22 08:44:05 ubuntu kernel: [ 6168.736904] Found USB, allowing access
+May 22 08:44:05 ubuntu kernel: [ 6169.582981] Opening stack.
+May 22 08:44:05 ubuntu kernel: [ 6169.582986] Checking if usb is connected..
+May 22 08:44:05 ubuntu kernel: [ 6169.582986] Found USB, allowing access
+May 22 08:44:05 ubuntu kernel: [ 6169.582987] Opened stack.
+May 22 08:44:05 ubuntu kernel: [ 6169.582996] Writing to stack.
+May 22 08:44:05 ubuntu kernel: [ 6169.582996] Checking if usb is connected..
+May 22 08:44:05 ubuntu kernel: [ 6169.582997] Found USB, allowing access
+May 22 08:44:05 ubuntu kernel: [ 6169.582997] Acquiring mutex for 'write'...
+May 22 08:44:05 ubuntu kernel: [ 6169.582998] Mutex for 'write' acquired.
+May 22 08:44:05 ubuntu kernel: [ 6169.582999] Parsing and saving 123
+May 22 08:44:05 ubuntu kernel: [ 6169.582999]  to stack
+May 22 08:44:05 ubuntu kernel: [ 6169.583001] 123 is on stack
+May 22 08:44:05 ubuntu kernel: [ 6169.583001] Releasing mutex for 'write'...
+May 22 08:44:05 ubuntu kernel: [ 6169.583002] Mutex for 'write' released.
+May 22 08:44:05 ubuntu kernel: [ 6169.583004] Releasing stack.
+May 22 08:44:05 ubuntu kernel: [ 6169.583005] Checking if usb is connected..
+May 22 08:44:07 ubuntu kernel: [ 6169.583005] Found USB, allowing access
+May 22 08:44:07 ubuntu kernel: [ 6170.906944] Opening stack.
+May 22 08:44:07 ubuntu kernel: [ 6170.906946] Checking if usb is connected..
+May 22 08:44:07 ubuntu kernel: [ 6170.906947] Found USB, allowing access
+May 22 08:44:07 ubuntu kernel: [ 6170.906947] Opened stack.
+May 22 08:44:07 ubuntu kernel: [ 6170.906957] Writing to stack.
+May 22 08:44:07 ubuntu kernel: [ 6170.906957] Checking if usb is connected..
+May 22 08:44:07 ubuntu kernel: [ 6170.906958] Found USB, allowing access
+May 22 08:44:07 ubuntu kernel: [ 6170.906958] Acquiring mutex for 'write'...
+May 22 08:44:07 ubuntu kernel: [ 6170.906959] Mutex for 'write' acquired.
+May 22 08:44:07 ubuntu kernel: [ 6170.906960] Parsing and saving 123
+May 22 08:44:07 ubuntu kernel: [ 6170.906960]  to stack
+May 22 08:44:07 ubuntu kernel: [ 6170.906962] 123 is on stack
+May 22 08:44:07 ubuntu kernel: [ 6170.906962] Releasing mutex for 'write'...
+May 22 08:44:07 ubuntu kernel: [ 6170.906963] Mutex for 'write' released.
+May 22 08:44:07 ubuntu kernel: [ 6170.906965] Releasing stack.
+May 22 08:44:07 ubuntu kernel: [ 6170.906965] Checking if usb is connected..
+May 22 08:44:11 ubuntu kernel: [ 6170.906966] Found USB, allowing access
+May 22 08:44:11 ubuntu kernel: [ 6175.616429] Opening stack.
+May 22 08:44:11 ubuntu kernel: [ 6175.616432] Checking if usb is connected..
+May 22 08:44:11 ubuntu kernel: [ 6175.616432] Found USB, allowing access
+May 22 08:44:11 ubuntu kernel: [ 6175.616433] Opened stack.
+May 22 08:44:11 ubuntu kernel: [ 6175.616441] Writing to stack.
+May 22 08:44:11 ubuntu kernel: [ 6175.616442] Checking if usb is connected..
+May 22 08:44:11 ubuntu kernel: [ 6175.616442] Found USB, allowing access
+May 22 08:44:11 ubuntu kernel: [ 6175.616442] Acquiring mutex for 'write'...
+May 22 08:44:11 ubuntu kernel: [ 6175.616444] Mutex for 'write' acquired.
+May 22 08:44:11 ubuntu kernel: [ 6175.616444] Parsing and saving 1223
+May 22 08:44:11 ubuntu kernel: [ 6175.616444]  to stack
+May 22 08:44:11 ubuntu kernel: [ 6175.616446] 1223 is on stack
+May 22 08:44:11 ubuntu kernel: [ 6175.616446] Releasing mutex for 'write'...
+May 22 08:44:11 ubuntu kernel: [ 6175.616447] Mutex for 'write' released.
+May 22 08:44:11 ubuntu kernel: [ 6175.616449] Releasing stack.
+May 22 08:44:11 ubuntu kernel: [ 6175.616450] Checking if usb is connected..
+May 22 08:44:14 ubuntu kernel: [ 6175.616450] Found USB, allowing access
+May 22 08:44:14 ubuntu kernel: [ 6178.620945] usb 1-1: USB disconnect, device number 6
+May 22 08:44:14 ubuntu kernel: [ 6178.621001] Drive unplugged
+May 22 08:44:37 ubuntu kernel: [ 6201.252218] Opening stack.
+May 22 08:44:37 ubuntu kernel: [ 6201.252222] Checking if usb is connected..
+May 22 08:44:46 ubuntu kernel: [ 6201.252223] Haven't detected usb, denying access
+May 22 08:44:46 ubuntu kernel: [ 6210.147130] Opening stack.
+May 22 08:44:46 ubuntu kernel: [ 6210.147135] Checking if usb is connected..
+May 22 08:44:59 ubuntu kernel: [ 6210.147136] Haven't detected usb, denying access
+May 22 08:44:59 ubuntu kernel: [ 6223.517246] perf: interrupt took too long (17804 > 17640), lowering kernel.perf_event_max_sample_rate to 11000
+May 22 08:45:56 ubuntu kernel: [ 6280.322262] usb 1-1: new high-speed USB device number 7 using ehci-pci
+May 22 08:45:57 ubuntu kernel: [ 6280.741409] usb 1-1: New USB device found, idVendor=13fe, idProduct=4300, bcdDevice= 1.00
+May 22 08:45:57 ubuntu kernel: [ 6280.741417] usb 1-1: New USB device strings: Mfr=1, Product=2, SerialNumber=3
+May 22 08:45:57 ubuntu kernel: [ 6280.741419] usb 1-1: Product: USB DISK 2.0
+May 22 08:45:57 ubuntu kernel: [ 6280.741421] usb 1-1: Manufacturer:         
+May 22 08:45:57 ubuntu kernel: [ 6280.741422] usb 1-1: SerialNumber: 9000855DB8EA3219
+May 22 08:45:57 ubuntu kernel: [ 6280.746820] Drive (13FE:4300) plugged
+May 22 08:45:57 ubuntu mtp-probe: checking bus 1, device 7: "/sys/devices/pci0000:00/0000:00:11.0/0000:02:03.0/usb1/1-1"
+May 22 08:45:57 ubuntu mtp-probe: bus: 1, device: 7 was not an MTP device
+May 22 08:45:57 ubuntu mtp-probe: checking bus 1, device 7: "/sys/devices/pci0000:00/0000:00:11.0/0000:02:03.0/usb1/1-1"
+May 22 08:45:57 ubuntu mtp-probe: bus: 1, device: 7 was not an MTP device
+May 22 08:46:05 ubuntu kernel: [ 6289.636171] Opening stack.
+May 22 08:46:05 ubuntu kernel: [ 6289.636175] Checking if usb is connected..
+May 22 08:46:05 ubuntu kernel: [ 6289.636175] Found USB, allowing access
+May 22 08:46:05 ubuntu kernel: [ 6289.636176] Opened stack.
+May 22 08:46:05 ubuntu kernel: [ 6289.636182] Reading from stack.
+May 22 08:46:05 ubuntu kernel: [ 6289.636183] Checking if usb is connected..
+May 22 08:46:05 ubuntu kernel: [ 6289.636183] Found USB, allowing access
+May 22 08:46:05 ubuntu kernel: [ 6289.636183] Acquiring mutex for 'read'...
+May 22 08:46:05 ubuntu kernel: [ 6289.636185] Mutex for 'read' acquired.
+May 22 08:46:05 ubuntu kernel: [ 6289.636186] 1223 is the head of stack
+May 22 08:46:05 ubuntu kernel: [ 6289.636187] Copying '1223' to user space
+May 22 08:46:05 ubuntu kernel: [ 6289.636190] Read 1223 successfully
+May 22 08:46:05 ubuntu kernel: [ 6289.636191] Releasing mutex for 'read'...
+May 22 08:46:05 ubuntu kernel: [ 6289.636191] Mutex for 'read' released.
+May 22 08:46:05 ubuntu kernel: [ 6289.636222] Reading from stack.
+May 22 08:46:05 ubuntu kernel: [ 6289.636223] Checking if usb is connected..
+May 22 08:46:05 ubuntu kernel: [ 6289.636223] Found USB, allowing access
+May 22 08:46:05 ubuntu kernel: [ 6289.636224] Acquiring mutex for 'read'...
+May 22 08:46:05 ubuntu kernel: [ 6289.636225] Mutex for 'read' acquired.
+May 22 08:46:05 ubuntu kernel: [ 6289.636225] 123 is the head of stack
+May 22 08:46:05 ubuntu kernel: [ 6289.636226] Copying '123' to user space
+May 22 08:46:05 ubuntu kernel: [ 6289.636227] Read 123 successfully
+May 22 08:46:05 ubuntu kernel: [ 6289.636227] Releasing mutex for 'read'...
+May 22 08:46:05 ubuntu kernel: [ 6289.636228] Mutex for 'read' released.
+May 22 08:46:05 ubuntu kernel: [ 6289.636230] Reading from stack.
+May 22 08:46:05 ubuntu kernel: [ 6289.636230] Checking if usb is connected..
+May 22 08:46:05 ubuntu kernel: [ 6289.636231] Found USB, allowing access
+May 22 08:46:05 ubuntu kernel: [ 6289.636231] Acquiring mutex for 'read'...
+May 22 08:46:05 ubuntu kernel: [ 6289.636231] Mutex for 'read' acquired.
+May 22 08:46:05 ubuntu kernel: [ 6289.636232] 123 is the head of stack
+May 22 08:46:05 ubuntu kernel: [ 6289.636232] Copying '123' to user space
+May 22 08:46:05 ubuntu kernel: [ 6289.636233] Read 123 successfully
+May 22 08:46:05 ubuntu kernel: [ 6289.636233] Releasing mutex for 'read'...
+May 22 08:46:05 ubuntu kernel: [ 6289.636234] Mutex for 'read' released.
+May 22 08:46:05 ubuntu kernel: [ 6289.636235] Reading from stack.
+May 22 08:46:05 ubuntu kernel: [ 6289.636235] Checking if usb is connected..
+May 22 08:46:05 ubuntu kernel: [ 6289.636236] Found USB, allowing access
+May 22 08:46:05 ubuntu kernel: [ 6289.636236] Acquiring mutex for 'read'...
+May 22 08:46:05 ubuntu kernel: [ 6289.636236] Mutex for 'read' acquired.
+May 22 08:46:05 ubuntu kernel: [ 6289.636237] 123 is the head of stack
+May 22 08:46:05 ubuntu kernel: [ 6289.636238] Copying '123' to user space
+May 22 08:46:05 ubuntu kernel: [ 6289.636238] Read 123 successfully
+May 22 08:46:05 ubuntu kernel: [ 6289.636239] Releasing mutex for 'read'...
+May 22 08:46:05 ubuntu kernel: [ 6289.636239] Mutex for 'read' released.
+May 22 08:46:05 ubuntu kernel: [ 6289.636240] Reading from stack.
+May 22 08:46:05 ubuntu kernel: [ 6289.636241] Checking if usb is connected..
+May 22 08:46:05 ubuntu kernel: [ 6289.636241] Found USB, allowing access
+May 22 08:46:05 ubuntu kernel: [ 6289.636241] Acquiring mutex for 'read'...
+May 22 08:46:05 ubuntu kernel: [ 6289.636242] Mutex for 'read' acquired.
+May 22 08:46:05 ubuntu kernel: [ 6289.636242] No data in stack left.
+May 22 08:46:05 ubuntu kernel: [ 6289.636244] Releasing mutex for 'read'...
+May 22 08:46:05 ubuntu kernel: [ 6289.636245] Mutex for 'read' released.
+May 22 08:46:05 ubuntu kernel: [ 6289.636253] Releasing stack.
+May 22 08:46:05 ubuntu kernel: [ 6289.636254] Checking if usb is connected..
