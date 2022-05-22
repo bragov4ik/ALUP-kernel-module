@@ -7,4 +7,4 @@ clean:
 	rm test_program
 
 main: main.c utils.c tests.c
-	$(CC) $^ -o test_program
+	$(CC) $^ -pthread -o test_program

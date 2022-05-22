@@ -23,6 +23,7 @@
         "memory": "c",
         "fs.h": "c",
         "kernel.h": "c",
-        "utils.h": "c"
+        "utils.h": "c",
+        "stdbool.h": "c"
     }
 }

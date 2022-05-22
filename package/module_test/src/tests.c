@@ -4,18 +4,54 @@
 #include <string.h>
 #include <stdio.h>
 #include <sys/ioctl.h>
+#include <pthread.h> // concurrency tests
+#include <stdbool.h>
 
 #include "tests.h"
 #include "utils.h"
 #include "chrdev.h"
 
-void __clear_file(int fd) {
+/*
+Clear opened file. (basically pop until error/empty).
+
+Returns 0 on success, `errno` on error.
+*/
+int __clear_file(int fd) {
     int read_bytes = 1;
     char abobus[255];
-    while (read_bytes != 0 && read_bytes != -1) {
+    while (read_bytes != 0) {
         read_bytes = read(fd, abobus, 255);
+        if (read_bytes == -1) {
+            printf("Finished clearing file (%s)\n", strerror(errno));
+            return errno;
+        }
     }
-    return;
+    printf("Finished clearing file (No more data left)\n");
+    return 0;
+}
+
+/*
+Clear file by name. (basically pop until error/empty).
+
+Returns 0 on success, `errno` on error.
+*/
+int clear_file(const char* fname) {
+    int fd;
+    int res;
+
+    fd = open(fname, O_RDWR);
+    if (fd == -1) {
+        return errno;
+    }
+
+    res = __clear_file(fd);
+    if (res != 0) {
+        close(fd);
+        return res;
+    }
+
+    close(fd);
+    return 0;
 }
 
 /*
@@ -24,9 +60,9 @@ Test inserting/popping 1 element.
 Returns 0 on success, other number on failure
 (3 if the test is not passed)
 */
-int one_element(char* fname) {
-    char* numbers[] = { "-31337" };
-    return __multiple_elements(fname, numbers, sizeof(numbers)/sizeof(numbers[0]));
+int one_element(const char* fname) {
+    const char* numbers[] = { "-31337" };
+    return multiple_elements(fname, numbers, sizeof(numbers)/sizeof(numbers[0]), true);
 }
 
 /*
@@ -35,9 +71,9 @@ Test inserting/popping 1 negative element.
 Returns 0 on success, other number on failure
 (3 if the test is not passed)
 */
-int negative_element(char* fname) {
-    char* numbers[] = { "-31337" };
-    return __multiple_elements(fname, numbers, sizeof(numbers)/sizeof(numbers[0]));
+int negative_element(const char* fname) {
+    const char* numbers[] = { "-31337" };
+    return multiple_elements(fname, numbers, sizeof(numbers)/sizeof(numbers[0]), true);
 }
 
 /*
@@ -46,9 +82,9 @@ Try inserting/reading 10 numbers to check proper ordering
 Returns 0 on success, other number on failure
 (3 if the test is not passed)
 */
-int ten_numbers(char* fname) {
-    char* numbers[] = { "31337", "123", "456", "1", "2", "3", "-3", "-2", "-1", "0"};
-    return __multiple_elements(fname, numbers, sizeof(numbers)/sizeof(numbers[0]));
+int ten_numbers(const char* fname) {
+    const char* numbers[] = { "31337", "123", "456", "1", "2", "3", "-3", "-2", "-1", "0"};
+    return multiple_elements(fname, numbers, sizeof(numbers)/sizeof(numbers[0]), true);
 }
 
 /*
@@ -57,9 +93,9 @@ Insert min and max int values.
 Returns 0 on success, other number on failure
 (3 if the test is not passed)
 */
-int min_max_test(char* fname) {
-    char* numbers[] = { "2147483647", "-2147483648" };
-    return __multiple_elements(fname, numbers, sizeof(numbers)/sizeof(numbers[0]));
+int min_max_test(const char* fname) {
+    const char* numbers[] = { "2147483647", "-2147483648" };
+    return multiple_elements(fname, numbers, sizeof(numbers)/sizeof(numbers[0]), true);
 }
 
 /*
@@ -68,8 +104,8 @@ Try inserting 256 numbers and reading them (to test capacity)
 Returns 0 on success, other number on failure
 (3 if the test is not passed)
 */
-int lots_of_numbers(char* fname) {
-    char* numbers[] = {
+int lots_of_numbers(const char* fname) {
+    const char* numbers[] = {
         "-128", "-127", "-126", "-125", "-124", "-123", "-122", "-121", "-120",
         "-119", "-118", "-117", "-116", "-115", "-114", "-113", "-112", "-111", "-110",
         "-109", "-108", "-107", "-106", "-105", "-104", "-103", "-102", "-101", "-100",
@@ -96,7 +132,7 @@ int lots_of_numbers(char* fname) {
         "101", "102", "103", "104", "105", "106", "107", "108", "109", "110",
         "111", "112", "113", "114", "115", "116", "117", "118", "119", "120",
         "121", "122", "123", "124", "125", "126", "127" };
-    return __multiple_elements(fname, numbers, sizeof(numbers)/sizeof(numbers[0]));
+    return multiple_elements(fname, numbers, sizeof(numbers)/sizeof(numbers[0]), true);
 }
 
 /*
@@ -104,7 +140,7 @@ Insert `number_count` elements from `numbers` into opened file (`fd`).
 
 Returns 0 on success, other number on failure.
 */
-static int __insert_multiple(int fd, char** numbers, int numbers_count) {
+static int __insert_multiple(int fd, const char *const *numbers, int numbers_count) {
     for (int i = 0; i < numbers_count; ++i) {
         printf("Writing '%s' (%d bytes)\n", numbers[i], strlen(numbers[i])+1);
         if (write(fd, numbers[i], strlen(numbers[i])+1) == -1) {
@@ -140,7 +176,7 @@ static int __read_multiple_unchecked(int fd, int numbers_count) {
     return 0;
 }
 
-static int __read_multiple_checked(int fd, char** numbers, int numbers_count) {
+static int __read_multiple_checked(int fd, const char *const *numbers, int numbers_count) {
     // some buffer for ints
     char read_val[13];
     int res;
@@ -168,12 +204,13 @@ static int __read_multiple_checked(int fd, char** numbers, int numbers_count) {
 /*
 Test inserting/popping multiple elements.
 
-They should be returned in the fifo order.
+If `compare_numbers` is set to `true`, it expects to
+read inserted numbes in FIFO order. Otherwise, just reads them.
 
 Returns 0 on success, other number on failure
 (3 if the test is not passed).
 */
-int __multiple_elements(char* fname, char** numbers, int numbers_count) {
+int multiple_elements(const char* fname, const char *const *numbers, int numbers_count, bool compare_numbers) {
     int fd;
     int res;
 
@@ -188,7 +225,12 @@ int __multiple_elements(char* fname, char** numbers, int numbers_count) {
         return res;
     }
     
-    res = __read_multiple_checked(fd, numbers, numbers_count);
+    if (compare_numbers) {
+        res = __read_multiple_checked(fd, numbers, numbers_count);
+    }
+    else {
+        res = __read_multiple_unchecked(fd, numbers_count);
+    }
     if (res != 0) {
         close(fd);
         return res;
@@ -206,7 +248,7 @@ allow opening 1 time each file simultaneously.
 Returns 0 on success, other number on failure
 (3 if the test is not passed)
 */
-int double_open(char* fname1, char* fname2) {
+int double_open(const char* fname1, const char* fname2) {
     int file1 = open(fname1, O_APPEND);
     if (file1 == -1) {
         return errno;
@@ -244,7 +286,7 @@ int double_open(char* fname1, char* fname2) {
     return 0;
 }
 
-int resize(char* fname, int new_size) {
+int resize(const char* fname, int new_size) {
     int file = open(fname, O_RDWR);
     if (file == -1) {
         return errno;
@@ -263,7 +305,7 @@ Test resizing chrdev file.
 Returns 0 on success, -errno on failure
 (+3 if the test is not passed)
 */
-int test_resize(char* fname) {
+int test_resize(const char* fname) {
     int res = resize(fname, 10);
     if (res != 0) {
         return res;
@@ -279,6 +321,65 @@ int test_resize(char* fname) {
     res = ten_numbers(fname);
     if (res == 0) {
         return 3;
+    }
+    // Previous should have failed, so needs cleanup
+    res = clear_file(fname);
+    if (res != 0) {
+        return res;
+    }
+    res = resize(fname, 256);
+    if (res != 0) {
+        return res;
+    }
+    return 0;
+}
+
+typedef struct ThreadArg {
+    const char* fname;
+    const char *const * numbers;
+    int numbers_count;
+} ThreadArg;
+
+static void* concurrent_multiple(void* t) {
+    ThreadArg* args = (ThreadArg*)t;
+    return (void*)multiple_elements(args->fname, args->numbers, args->numbers_count, false);
+}
+
+int test_concurrent_multiple(const char* fname) {
+    // Thread 1
+    pthread_t th1;
+    ThreadArg args1;
+    args1.fname = fname;
+    const char* numbers1[] = {"1", "2", "3", "4", "5", "6", "7", "8", "9"};
+    args1.numbers = numbers1;
+    args1.numbers_count = sizeof(numbers1)/sizeof(numbers1[0]);
+
+    // Thread 2
+    pthread_t th2;
+    ThreadArg args2;
+    args2.fname = fname;
+    const char* numbers2[] = {"10", "20", "30", "40", "50", "60", "70", "80", "90"};
+    args2.numbers = numbers2;
+    args2.numbers_count = sizeof(numbers2)/sizeof(numbers2[0]);
+
+    pthread_create(&th1, NULL, concurrent_multiple, (void*)(&args1));
+    pthread_create(&th2, NULL, concurrent_multiple, (void*)(&args2));
+
+    void* ret_from_thread;
+    int ri1;
+    int ri2;
+    pthread_join(th1, &ret_from_thread);
+    ri1 = (int)ret_from_thread;
+    pthread_join(th2, &ret_from_thread);
+    ri2 = (int)ret_from_thread;
+    
+    printf("Thread 1 returned %d (errno %s)\n", ri1, strerror(ri1));
+    printf("Thread 2 returned %d (errno %s)\n", ri2, strerror(ri2));
+    if (ri1 != 0) {
+        return ri1;
+    }
+    else if (ri2 != 0) {
+        return ri2;
     }
     return 0;
 }
