@@ -137,6 +137,7 @@ static int __read_multiple_unchecked(int fd, int numbers_count) {
         }
         printf("Read '%s'\n", read_val);
     }
+    return 0;
 }
 
 static int __read_multiple_checked(int fd, char** numbers, int numbers_count) {
@@ -161,6 +162,7 @@ static int __read_multiple_checked(int fd, char** numbers, int numbers_count) {
             return 3;
         }
     }
+    return 0;
 }
 
 /*
